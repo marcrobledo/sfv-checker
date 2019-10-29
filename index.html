@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>SFV Checker Online</title>
+	<meta http-equiv="content-Type" content="text/html; charset=UTF-8"/>
+	<meta name="description" content="A web-based CRC32/MD5/SHA1 file checker, it lets you check file integrities easily. No uploads required."/>
+	<meta name="keywords" content="sfv,checker,check,crc,crc32,file,checksum,md5,sha1,online,web,html5"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+	<link rel="manifest" href="./manifest.json"/>
+	<link rel="shortcut icon" href="./favicon_crc32.png" type="image/png" sizes="16x16"/>
+	<link rel="shortcut icon" href="./logo192_crc32.png" type="image/png" sizes="192x192"/>
+	<!-- <link rel="apple-touch-icon" href="./logo192.png" sizes="192x192" /> -->
+	<link type="text/css" rel="stylesheet" href="./sfv-checker.css" media="all"/>
+	<script type="text/javascript" src="./sfv-checker.js"></script>
+	<script type="text/javascript" src="./crc32.js"></script>
+	<script type="text/javascript" src="./md5.js"></script>
+
+	<!-- mobile header color -->	
+	<meta id="mobile-header-chrome" name="theme-color" />
+	<meta id="mobile-header-safari" name="apple-mobile-web-app-status-bar-style" />
+</head>
+<!-- <body unselectable="on" onselectstart="return false"> -->
+<body>
+
+
+<!-- HEADER -->
+<header>
+	<div class="max-width">
+		<div class="row">
+			<div class="column">
+				<span id="icon"><img id="logo" /></span><h1><span>SFV</span> Checker Online</h1>
+			</div>
+			<div class="column">
+				<!-- FOOTER -->
+				<footer>
+					SFV Checker Online by <a href="/">Marc Robledo</a><br/>
+					<a class="icon github" href="https://github.com/marcrobledo/sfv-checker/" target="_blank"><img src="icon_github.png" /> See on GitHub</a><br/>
+					<a class="icon heart" href="https://www.paypal.me/marcrobledo/5" target="_blank" rel="nofollow"><img src="icon_heart.png" /> Donate</a>
+				</footer>
+			</div>
+		</div>
+		
+		
+		<div id="toolbar">
+			<label for="select-mode">Mode:
+				<select id="select-mode" onchange="setMode(parseInt(this.value))">
+					<option value="0">CRC32</option>
+					<option value="1">MD5</option>
+					<option value="2">SHA1</option>
+				</select>
+			</label>
+			<button onclick="el('input-files').click()">Add files</button>
+			<button id="button-export" onclick="exportFileList(getMode());">Export list</button>
+		</div>
+	</div>
+</header>
+
+
+<form id="form"><input id="input-files" type="file" multiple style="display:none" /></form>
+
+<!-- APP -->
+<div id="wrapper" class="max-width">
+	<table>
+		<thead><tr><th>File</th><th id="th-mode"></th></tr></thead>
+		<tbody id="tbody"></tbody>
+	</table>
+	
+	<div id="message">
+		Drag and drop files here in order to calculate their <span id="message-mode">md5</span> checksum.<br/>
+		Drag and drop a .sfv, .md5 or .sha1 file in order to check file integrities.
+	</div>
+</div>
+
+
+
+</body></html>

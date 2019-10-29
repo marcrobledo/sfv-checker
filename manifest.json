@@ -1,0 +1,17 @@
+{
+	"short_name":"SFV Checker",
+	"name":"SFV Checker",
+	"icons":[
+		{
+			"src": "logo192_crc32.png",
+			"sizes": "192x192",
+			"type": "image/png",
+			"density": "1.0"
+		}
+	],
+	"start_url": "index.html",
+	"display": "standalone",
+	"orientation": "portrait",
+	"theme_color": "#83db88",
+	"background_color": "#83db88"
+}

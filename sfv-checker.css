@@ -1,0 +1,343 @@
+/* Stylesheet template for SFV Online Checker by Marc Robledo v20191008 */
+
+/* @FONT-FACES */
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,700');
+
+body{
+	margin:0;
+	font:15px 'Open Sans',sans-serif;
+	font-weight:300;
+	cursor:default;
+	line-height:1.8;
+	background-color:#f4f4f4;
+	color:#3c3c3c;
+	/*-moz-user-select:none;
+	-webkit-user-select: none;
+	-ms-user-select:none;
+	-o-user-select:none;
+	user-select:none;*/
+}
+
+.text-center{text-align:center}
+
+
+table{
+	border-collapse:collapse;
+	width:100%;
+}
+tr.verified{background-color:#e7f7ea;}
+tr.error{background-color:#f9e8e8;}
+tr>td:nth-child(2){position:relative}
+.row-options{
+	font:15px 'Open Sans',sans-serif;
+	position: absolute;
+	top: 0;
+	right: 0;
+	height: 100%;
+	box-sizing: border-box;
+	line-height: 2.5;
+	padding-left:40px;
+	padding-right:10px;
+	/*background-color:#f9f6f6;*/
+	background: linear-gradient(to right, transparent 0%, #f9f6f6 20px,#f9f6f6 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+}
+
+.row-options img{height:16px;vertical-align:middle}
+.row-options .option:hover{cursor:pointer}
+
+
+td,th{
+  padding:6px 10px;
+}
+th{background-color:#ddd}
+th:first-child,td:first-child{border-radius:4px 0 0 4px;text-align:left}
+th:last-child,td:last-child{border-radius:0 4px 4px 0;text-align:right}
+tr{
+  border-bottom:1px solid #ddd;
+}
+tr:last-child{
+  border-bottom:none;
+}
+tr.verified td:last-child:before, tr.error td:last-child:before{
+	padding: 2px 6px;
+	border-radius:2px; margin-right:4px;
+	font-family:'Open Sans';
+	font-size: 80%;
+	font-weight: bold;
+	color: white;
+}
+tr.verified td:last-child:before{
+	content:"Verified";
+	background-color:#44a41c;
+}
+tr.error td:last-child:before{
+	content:"Not valid";
+	background-color:#cc2f1f;
+}
+tbody tr:hover{background-color:#f9f6f6}
+
+
+#message{
+	text-align:center;
+	padding: 80px 20px;
+	font-size:110%;
+	border: 3px dashed #bbb;
+	border-radius:3px;
+}
+
+
+
+
+
+header{
+	padding:10px 0;
+	margin-bottom:20px;
+}
+.row:after{
+	content: " ";
+	display:block;
+	clear:both;
+}
+header .column{
+	width:50%;
+	float:left;
+	box-sizing:border-box;
+}
+header .column:last-child{text-align:right}
+
+
+
+
+
+
+
+
+
+.max-width{
+	max-width:960px;
+	margin: 0 auto;
+}
+
+
+header{
+	/*text-align:center;*/
+	background-color:#dcc;
+}
+header{transition:background-color .2s;}
+body.crc32 header{background-color:#83db88;}
+body.md5 header{background-color:#f78572;}
+body.sha1 header{background-color:#8ad9ee;}
+
+
+#icon{
+	background-color:rgba(255,255,255,.7);
+	display:inline-block;
+	line-height:0;
+	padding:14px;
+	box-sizing:border-box;
+	width:80px;
+	height:80px;
+	border-radius:40px;
+	margin:0 10px 0 0;
+	vertical-align:middle;
+	background-color:rgba(0,0,0,.1) 0 4px
+}
+
+#icon img{width:100%}
+h1{
+	font-weight:300;
+	margin:0;
+	display:inline;
+}
+h1 span{
+	font-weight:400;
+}
+#description{
+	color:#999;
+	text-align:center;
+	font-weight:300;
+}
+
+
+a.icon img{
+	vertical-align:middle;
+	width:12px;
+	height:12px;
+}
+a.icon{
+	border-radius:40px;
+	color:white !important;
+	text-decoration:none;
+	padding: 4px 16px;
+}
+a.icon.github{background-color:#171515;}
+a.icon.github:hover{background-color:#373535;}
+a.icon.heart{background-color:#f8015e;}
+a.icon.heart:hover{background-color:#ff217e;}
+
+
+
+tr>td:nth-child(n+2){
+	font-family:Consolas, Menlo, Monaco, Lucida Console, Liberation Mono, DejaVu Sans Mono, Bitstream Vera Sans Mono, Roboto Mono, monospace
+}
+
+
+
+/* forms */
+select,button{
+	box-sizing:border-box;
+	font-family:inherit;
+	font-size:100%;
+	font-weight:inherit;
+	outline:0;
+	border:none;
+	border-radius:3px;
+	padding:5px 12px;
+	height:36px;
+	color:inherit;
+	background-color:inherit;
+	border:1px solid rgba(0,0,0,.2);
+	transition: all .2s;
+}
+select{
+	padding-right:20px;
+	-webkit-appearance:none;
+	-moz-appearance:none;
+	text-overflow:'';
+
+	background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeD0iMTJweCIgeT0iMHB4IiB3aWR0aD0iMjRweCIgaGVpZ2h0PSIzcHgiIHZpZXdCb3g9IjAgMCA2IDMiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDYgMyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+PHBvbHlnb24gcG9pbnRzPSI1Ljk5MiwwIDIuOTkyLDMgLTAuMDA4LDAgIi8+PC9zdmc+");
+	background-position:100% center;
+	background-repeat:no-repeat;
+}
+select:hover{
+	cursor:pointer;
+	border:1px solid rgba(0,0,0,.0);
+	background-color:rgba(0,0,0,.4);
+	color:white;
+}
+select::-ms-expand{display:none}
+
+button:hover{
+	cursor:pointer;
+	border:1px solid rgba(0,0,0,.0);
+	background-color:rgba(0,0,0,.4);
+	color:white;
+}
+
+
+footer{
+	font-size:13px;
+	font-size:87%;
+	line-height:2.2;
+}
+body.crc32 a{
+	color:#40a214;
+	transition:color .2s;
+}
+body.md5 a{color:#d03737}
+body.sha1 a{color:#3775d0}
+body a:hover{color:orange}
+
+
+
+
+
+
+
+
+/* MarcDragAndDrop */
+#drop-overlay{
+	z-index: 9000;
+	background: white; /* Old browsers */
+	background: radial-gradient(ellipse at center, #fff 0%,transparent 70%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	position: fixed;
+	top: 0; left: 0;
+	width: 100%; height: 100%;
+	padding:50px 0;
+	font-size:22px;
+	text-align: center;
+	text-shadow: white 0 0 8px;
+	opacity:0;
+	visibility:hidden;
+	transition: visibility .2s,opacity .2s;
+}
+#drop-overlay:before{
+	content:"";
+	display:block;
+	height:40%
+}
+body.dragging-files #drop-overlay{visibility:visible;opacity:1;}
+body.dragging-files #drop-message{visibility:hidden !important}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* responsive */
+@media only screen and (max-width:981px){
+	header{padding:20px}
+	#wrapper{margin:20px}
+}
+@media only screen and (max-width:641px){
+	header{
+		padding:12px 8px;
+		margin-bottom:0
+	}
+	footer{display:none}
+	#toolbar{text-align:center;margin-top:10px;}
+	#wrapper{margin:0 0}
+	header .column{
+		width:auto;
+		float:none;
+		text-align:center !important;
+	}
+
+
+	#message{
+		margin:20px;
+	}
+
+	body{
+		font-size:14px
+	}
+	h1{font-size:140%}
+	
+	#icon{
+		padding:8px;
+		width:40px;
+		height:40px;
+	}
+
+	thead{display:none}
+	tr{display:block;}
+	tr>td{
+		display:block;
+	}
+	tr>td:nth-child(1){
+		padding-bottom:0;
+	}
+	tr>td:nth-child(2){
+		font-size:90%;
+		text-align:left;
+		padding-top:0;
+	}
+}
