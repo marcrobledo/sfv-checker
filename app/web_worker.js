@@ -9,11 +9,11 @@ self.onmessage = event => { // listen for messages from the main thread
 		mode:event.data.mode,
 		u8array:event.data.u8array
 	};
-	
+
 	if(event.data.mode===0)
-		returnObject.result=crc32(event.data.u8array);
+		returnObject.result=HasherCRC32.hash(event.data.u8array);
 	else if(event.data.mode===1)
-		returnObject.result=md5(event.data.u8array);
+		returnObject.result=HasherMD5.hash(event.data.u8array);
 	else
 		returnObject.result='invalid';
 

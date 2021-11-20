@@ -15,23 +15,24 @@
 
 
 var PRECACHE_ID='sfv-checker';
-var PRECACHE_VERSION='v1';
+var PRECACHE_VERSION='v11';
 var PRECACHE_URLS=[
 '/sfv-checker/index.html','/sfv-checker/',
 '/sfv-checker/manifest.json',
-'/sfv-checker/sfv-checker.css',
-'/sfv-checker/sfv-checker.js',
-'/sfv-checker/icon_github.png',
-'/sfv-checker/icon_heart.png',
-'/sfv-checker/favicon_crc32.png',
-'/sfv-checker/favicon_md5.png',
-'/sfv-checker/favicon_sha1.png',
-'/sfv-checker/logo192_crc32.png',
-'/sfv-checker/logo192_md5.png',
-'/sfv-checker/logo192_sha1.png',
-'/sfv-checker/crc32.js',
-'/sfv-checker/md5.js',
-'/sfv-checker/web_worker.js',
+'/sfv-checker/app/style.css',
+'/sfv-checker/app/sfv-checker.js',
+'/sfv-checker/app/crc32.js',
+'/sfv-checker/app/md5.js',
+'/sfv-checker/app/sha1.js',
+'/sfv-checker/app/locale.js',
+'/sfv-checker/app/web_worker.js',
+'/sfv-checker/app/resources/icon_pwa192.png',
+'/sfv-checker/app/resources/favicon_crc32.png',
+'/sfv-checker/app/resources/favicon_md5.png',
+'/sfv-checker/app/resources/favicon_sha1.png',
+'/sfv-checker/app/resources/logo192_crc32.png',
+'/sfv-checker/app/resources/logo192_md5.png',
+'/sfv-checker/app/resources/logo192_sha1.png'
 ];
 
 
