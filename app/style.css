@@ -1,4 +1,4 @@
-/* Stylesheet template for SFV Online Checker by Marc Robledo v20191008 */
+/* Stylesheet template for SFV Online Checker by Marc Robledo v20250324 */
 
 /* @FONT-FACES */
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,700');
@@ -168,23 +168,29 @@ h1 span{
 }
 
 
-#toolbar{margin-top:16px;}
-#toolbar:after{
-	content: " ";
-	display:block;
-	clear:both;
+#toolbar{
+	margin-top:16px;
+	display:flex;
+	justify-content:space-between;
+	line-height:1;
 }
-#toolbar-left,#toolbar-right{box-sizing:border-box;}
-#toolbar-left{width:60%;float:left;}
-#toolbar-right{width:40%;float:right;}
 #toolbar-right{text-align:right}
-#toolbar svg{
-	height:17px;
-	fill:rgba(0,0,0,.65);
+#toolbar button>svg{
+	height:16px;
 	vertical-align:middle;
 	transition: fill .2s;
 }
-#toolbar button:hover svg{fill:white}
+#toolbar button>span{
+	vertical-align:middle;
+	margin-left:4px;
+}
+#button-add{
+	border-radius:3px 0 0 3px;
+}
+#button-add-string{
+	border-left-width:0px;
+	border-radius:0 3px 3px 0;
+}
 
 
 a.icon img{
@@ -227,21 +233,21 @@ select,button{
 }
 select{
 	padding-right:20px;
-	-webkit-appearance:none;
-	-moz-appearance:none;
+	appearance:none;
 	text-overflow:'';
 
-	background-image:url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeD0iMTJweCIgeT0iMHB4IiB3aWR0aD0iMjRweCIgaGVpZ2h0PSIzcHgiIHZpZXdCb3g9IjAgMCA2IDMiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDYgMyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+PHBvbHlnb24gcG9pbnRzPSI1Ljk5MiwwIDIuOTkyLDMgLTAuMDA4LDAgIi8+PC9zdmc+");
-	background-position:100% center;
+	background-image:url('data:image/svg+xml,%3Csvg xmlns%3D"http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" viewBox%3D"0 0 6 3"%3E%3Cpath d%3D"M6 0 3 3 0 0z"%2F%3E%3C%2Fsvg%3E');
+	background-position:right 6px center;
 	background-repeat:no-repeat;
+	background-size:8px;
 }
 select:hover{
+	background-image:url('data:image/svg+xml,%3Csvg xmlns%3D"http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg" viewBox%3D"0 0 6 3"%3E%3Cpath fill%3D"white" d%3D"M6 0 3 3 0 0z"%2F%3E%3C%2Fsvg%3E');
 	cursor:pointer;
 	border:1px solid rgba(0,0,0,.0);
 	background-color:rgba(0,0,0,.4);
 	color:white;
 }
-select::-ms-expand{display:none}
 
 button:hover{
 	cursor:pointer;

@@ -87,6 +87,8 @@ MarcTranslatableUI.enable({
 			id:'en',
 			strings:{
 				'add_files':'Add files',
+				'add_string':'Add text',
+				'type_text':'Type text to hash:',
 				'export_list':'Export .%s list',
 				'clear_list':'Clear file list',
 				'mode':'Mode',
@@ -104,6 +106,8 @@ MarcTranslatableUI.enable({
 			id:'es',
 			strings:{
 				'add_files':'Añadir ficheros',
+				'add_string':'Añadir texto',
+				'type_text':'Introduce el texto a hashear:',
 				'export_list':'Exportar lista .%s',
 				'clear_list':'Vaciar lista',
 				'mode':'Modo',

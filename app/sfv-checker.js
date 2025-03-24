@@ -1,4 +1,4 @@
-/* sfv-checker.js v20210427 - Marc Robledo 2016-2021 - http://www.marcrobledo.com/license */
+/* sfv-checker.js v20250324 - Marc Robledo 2016-2025 - http://www.marcrobledo.com/license */
 const COMPATIBLE_BROWSER=(typeof window.FileReader==='function' && typeof window.Worker==='function');
 const MODE_CRC32=0;
 const MODE_MD5=1;
@@ -381,6 +381,17 @@ addEvent(window,'load',function(){
 	});
 	addEvent(el('button-add'), 'click', function(){
 		el('input-files').click();
+	});	
+	addEvent(el('button-add-string'), 'click', function(){
+		const text=prompt(_('type_text'));
+		if(text){
+			const fileName=text+'.txt';
+			const blob=new Blob([text], {type: 'text/plain'});
+			const fakeFile=new File([blob], fileName);
+			addFile(fileName, fakeFile);
+			refreshWrapper();
+			hashNextFile();
+		}
 	});	
 	addEvent(el('button-export'), 'click', function(){
 		exportFileList(getMode());

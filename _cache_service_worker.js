@@ -15,7 +15,7 @@
 
 
 var PRECACHE_ID='sfv-checker';
-var PRECACHE_VERSION='v11';
+var PRECACHE_VERSION='v12';
 var PRECACHE_URLS=[
 '/sfv-checker/index.html','/sfv-checker/',
 '/sfv-checker/manifest.json',
