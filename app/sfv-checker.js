@@ -421,8 +421,12 @@ function parseFileList(file, mode){
 	fileReader.addEventListener('load',function(){
 		var lines=this.result.replace(/\r/g,'\n').replace(/\n+/g,'\n').split('\n');
 		for(var i=0; i<lines.length; i++){
-			const line=formatFileHash(lines[i])
-			var match=line.match(MODES[mode].regex);
+			let line=lines[i]
+			if (!line) {
+				continue
+			}
+
+			var match=formatFileHash(line, mode).match(MODES[mode].regex);
 			if(match){
 				if(mode===MODE_CRC32)
 					addFile(match[1]).setChecksumValid(MODE_CRC32, match[2].toLowerCase());
