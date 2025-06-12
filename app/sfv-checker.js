@@ -11,15 +11,21 @@ const MODES=[
 	{
 		title:'CRC32',
 		listExtension:'sfv',
-		regex:/^[ \t]*([^;].*?) +([0-9a-fA-F]{8})$/
+		regex:/^[ \t]*([^;].*?) +([0-9a-fA-F]{8})$/,
+		hashLength: 8,
+		hashColumn: 1
 	},{
 		title:'MD5',
 		listExtension:'md5',
 		regex:/^([0-9a-fA-F]{32}) [ \*](.+)$/, /* MD5 asterisk determines binary mode instead of text, usually not used */
+		hashLength: 32,
+		hashColumn: 0
 	},{
 		title:'SHA1',
 		listExtension:'sha1',
-		regex:/^([0-9a-fA-F]{40}) [ \*](.+)$/ /* SHA1 */
+		regex:/^([0-9a-fA-F]{40}) [ \*](.+)$/, /* SHA1 */
+		hashLength: 40,
+		hashColumn: 0
 	}
 ];
 
@@ -415,7 +421,12 @@ function parseFileList(file, mode){
 	fileReader.addEventListener('load',function(){
 		var lines=this.result.replace(/\r/g,'\n').replace(/\n+/g,'\n').split('\n');
 		for(var i=0; i<lines.length; i++){
-			var match=lines[i].match(MODES[mode].regex);
+			let line=lines[i]
+			if (!line) {
+				continue
+			}
+
+			var match=formatFileHash(line, mode).match(MODES[mode].regex);
 			if(match){
 				if(mode===MODE_CRC32)
 					addFile(match[1]).setChecksumValid(MODE_CRC32, match[2].toLowerCase());
@@ -430,7 +441,18 @@ function parseFileList(file, mode){
 	fileReader.readAsText(file);
 }
 
+function formatFileHash(line, mode) {
+	const currentMode = MODES[mode];
+	const splits = line.split(" ")
 
+	const filenameColumn = currentMode.hashColumn === 0 ? 1 : 0;
+	const filename = splits[filenameColumn]
+
+	const hashColumn = currentMode.hashColumn
+	const hash = splits[hashColumn].padStart(currentMode.hashLength, "0")
+
+	return `${filename} ${hash}`
+}
 
 
 
