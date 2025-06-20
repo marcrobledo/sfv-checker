@@ -68,9 +68,9 @@ tr.verified td:last-child:before, tr.error td:last-child:before{
 	text-align:center
 }
 tr.verified td:last-child:before{content:"Verified";background-color:#44a41c;}
-tr.verified.verified-es td:last-child:before{content:"Verificado"}
+tr.verified.verified-es-ES td:last-child:before{content:"Verificado"}
 tr.error td:last-child:before{content:"Not valid";background-color:#cc2f1f;}
-tr.error.error-es td:last-child:before{content:"No válido"}
+tr.error.error-es-ES td:last-child:before{content:"No válido"}
 tbody tr:hover{background-color:#f9f6f6}
 
 tr>td:first-child{
@@ -193,21 +193,22 @@ h1 span{
 }
 
 
-a.icon img{
+
+footer a:has(svg)>*{
+	display:inline-block;
 	vertical-align:middle;
-	width:12px;
-	height:12px;
 }
-a.icon{
+footer a:has(svg){
+	vertical-align:middle;
 	border-radius:40px;
 	color:white !important;
 	text-decoration:none;
 	padding: 4px 16px;
 }
-a.icon.github{background-color:#171515;}
-a.icon.github:hover{background-color:#373535;}
-a.icon.heart{background-color:#f8015e;}
-a.icon.heart:hover{background-color:#ff217e;}
+a.link-github{background-color:#171515;}
+a.link-github:hover{background-color:#373535;}
+a.link-donate{background-color:#f8015e;}
+a.link-donate:hover{background-color:#ff217e;}
 
 
 

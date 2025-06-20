@@ -1,5 +1,42 @@
-/* sfv-checker.js v20250324 - Marc Robledo 2016-2025 - http://www.marcrobledo.com/license */
-const COMPATIBLE_BROWSER=(typeof window.FileReader==='function' && typeof window.Worker==='function');
+/*
+* SFV Checker
+* A web app that calculates and checks CRC32, MD5 or SHA1 file integrities.
+* (last update: 2025-06-20)
+* By Marc Robledo https://www.marcrobledo.com
+*
+* License:
+*
+* MIT License
+* 
+* Copyright (c) 2016-2025 Marc Robledo
+* 
+* Permission is hereby granted, free of charge, to any person obtaining a copy
+* of this software and associated documentation files (the "Software"), to deal
+* in the Software without restriction, including without limitation the rights
+* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+* copies of the Software, and to permit persons to whom the Software is
+* furnished to do so, subject to the following conditions:
+* 
+* The above copyright notice and this permission notice shall be included in all
+* copies or substantial portions of the Software.
+* 
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+* SOFTWARE.
+*/
+
+if(typeof window.FileReader!=='function' || typeof window.Worker!=='function'){
+	alert('Your browser is outdated and not compatible with this app.');
+	throw new Error('Incompatible browser');
+}
+
+
+
+
 const MODE_CRC32=0;
 const MODE_MD5=1;
 const MODE_SHA1=2;
@@ -39,53 +76,46 @@ else if(location.protocol==='https:' && 'serviceWorker' in navigator)
 	navigator.serviceWorker.register('/sfv-checker/_cache_service_worker.js', {scope: '/sfv-checker/'});
 
 
-
-/* Shortcuts */
-function addEvent(e,ev,f){e.addEventListener(ev,f,false)}
-function el(e){return document.getElementById(e)}
-function stopPropagation(e){if(typeof e.stopPropagation!=='undefined')e.stopPropagation();else e.cancelBubble=true}
-
 var filesByName={};
 var isHashing=false;
 
 /* Web Worker */
-var webWorker;
-if(COMPATIBLE_BROWSER){
-	webWorker=new Worker('./app/web_worker.js');
-	webWorker.onmessage=function(event){
-		if(event.data.result){
-			isHashing=false;
-			filesByName[event.data.fileName].setChecksum(event.data.mode, event.data.result);
+const webWorker=new Worker('./app/web_worker.js');
+webWorker.onmessage=function(event){
+	if(event.data.result){
+		isHashing=false;
+		filesByName[event.data.fileName].setChecksum(event.data.mode, event.data.result);
 
-			hashNextFile();
-		}
-	};
-}
+		hashNextFile();
+	}
+};
 
 
 
 
 
 function getMode(){
-	return parseInt(el('select-mode').value);
+	return parseInt(document.getElementById('select-mode').value);
 }
 function setMode(newMode){
-	var className=MODES[newMode].title.toLowerCase();
-	
-	if(newMode===MODE_CRC32){
-		el('mobile-header-chrome').content='#83db88';
-		el('mobile-header-safari').content='#83db88';
-	}else if(newMode===MODE_MD5){
-		el('mobile-header-chrome').content='#f78572';
-		el('mobile-header-safari').content='#f78572';
-	}else if(newMode===MODE_SHA1){
-		el('mobile-header-chrome').content='#8ad9ee';
-		el('mobile-header-safari').content='#8ad9ee';
-	}
-	refreshEmptyMessage();
+	const className=MODES[newMode].title.toLowerCase();
 
-	MarcTranslatableUI.refreshOne('export_list');
-	el('logo').src='./app/resources/logo192_'+className+'.png';
+	if(newMode===MODE_CRC32){
+		document.getElementById('mobile-header-chrome').content='#83db88';
+		document.getElementById('mobile-header-safari').content='#83db88';
+	}else if(newMode===MODE_MD5){
+		document.getElementById('mobile-header-chrome').content='#f78572';
+		document.getElementById('mobile-header-safari').content='#f78572';
+	}else if(newMode===MODE_SHA1){
+		document.getElementById('mobile-header-chrome').content='#8ad9ee';
+		document.getElementById('mobile-header-safari').content='#8ad9ee';
+	}
+	
+	/* refresh empty message */
+	TranslateUI.translateElement(document.getElementById('message').children[0], MODES[getMode()].title);
+
+	TranslateUI.translateElement(document.getElementById('button-export').children[1], MODES[getMode()].listExtension);
+	document.getElementById('logo').src='./app/resources/logo192_'+className+'.png';
 	document.body.className=className;
 	var links=document.getElementsByTagName('link');
 	for(var i=0; i<links.length; i++){
@@ -108,19 +138,16 @@ function setMode(newMode){
 }
 function refreshWrapper(){
 	if(Object.keys(filesByName).length){
-		el('button-export').className='';
-		el('button-delete').className='';
-		el('tbody').parentElement.style.display='table';
-		el('message').style.display='none';
+		document.getElementById('button-export').className='';
+		document.getElementById('button-delete').className='';
+		document.getElementById('tbody').parentElement.style.display='table';
+		document.getElementById('message').style.display='none';
 	}else{
-		el('button-export').className='hide';
-		el('button-delete').className='hide';
-		el('tbody').parentElement.style.display='none';
-		el('message').style.display='block';
+		document.getElementById('button-export').className='hide';
+		document.getElementById('button-delete').className='hide';
+		document.getElementById('tbody').parentElement.style.display='none';
+		document.getElementById('message').style.display='block';
 	}
-}
-function refreshEmptyMessage(){
-	MarcTranslatableUI.refreshOne('empty1');
 }
 
 function addFile(fileName, file){
@@ -175,10 +202,10 @@ function hashNextFile(){
 
 function clearList(){
 	filesByName={};
-	el('tbody').innerHTML='';
+	document.getElementById('tbody').innerHTML='';
 	if(isHashing){
 		filesByName[isHashing.fileName]=isHashing;
-		el('tbody').appendChild(isHashing.tr);
+		document.getElementById('tbody').appendChild(isHashing.tr);
 	}
 	refreshWrapper();
 }
@@ -199,7 +226,7 @@ function SFVFile(fileName, file){
 		this.checksumsValid[i]=false;
 	}
 
-	el('tbody').appendChild(this.tr);
+	document.getElementById('tbody').appendChild(this.tr);
 
 	
 	if(file)
@@ -221,16 +248,16 @@ SFVFile.prototype.refreshRow=function(mode){
 			this.tr.children[1].innerHTML=this.checksumsValid[mode]? '<span class="hash">'+this.checksumsValid[mode]+'</span>' : '?';
 			this.tr.className='';
 		}else if(this.checksums[mode]===STATUS_CALCULATING){
-			this.tr.children[1].innerHTML='<span class="calculating">'+_('calculating')+'...</span>';
+			this.tr.children[1].innerHTML='<span class="calculating">'+_('Calculating')+'...</span>';
 			this.tr.className='';
 		}else if(this.checksumsValid[mode]){
 			if(this.checksums[mode]===this.checksumsValid[mode]){
 				this.tr.children[1].innerHTML='';
 				this.tr.children[1].appendChild(createCopiableHashSpan(this, mode));
-				this.tr.className='verified verified-'+MarcTranslatableUI.getCurrentLanguageCode();
+				this.tr.className='verified verified-'+TranslateUI.getCurrentLanguage();
 			}else{
 				this.tr.children[1].innerHTML='<span class="hash invalid">'+this.checksums[mode]+'</span><br/><span class="hash">'+this.checksumsValid[mode]+'</span>';
-				this.tr.className='error error-'+MarcTranslatableUI.getCurrentLanguageCode();
+				this.tr.className='error error-'+TrasnlateUI.getCurrentLanguage();
 			}
 		}else{
 			if(this.checksums[mode]){
@@ -249,9 +276,9 @@ function createCopiableHashSpan(sfvFile, mode){
 	var span=document.createElement('span');
 	span.className='hash clickable';
 	span.innerHTML=sfvFile.checksums[mode];
-	addEvent(span, 'click', function(evt){
+	span.addEventListener('click', function(evt){
 		sfvFile.copyHashToClipboard(mode);
-		sfvFile.tr.children[1].innerHTML=_('copied_to_clipboard');
+		sfvFile.tr.children[1].innerHTML=_('Hash copied to clipboard');
 		window.setTimeout(function(){
 			if(getMode()===mode)
 				sfvFile.refreshRow(mode);
@@ -316,24 +343,12 @@ var MarcClipboard=(function(){
 var SFVCheckerSettings=(function(){
 	var IS_STORAGE_AVAILABLE=(typeof(Storage)!=='undefined');
 
-	var VALID_LOCALES=['en','es'];
-	var getValidLanguage=function(lang){
-		if(typeof lang==='string' && VALID_LOCALES.indexOf(lang)!==-1){
-			return lang;
-		}else{
-			return VALID_LOCALES[0];
-		}
-	}
-
-
 	return{
 		/* default settings */
-		lang:getValidLanguage(navigator.language || navigator.userLanguage),
 		defaultMode:MODE_MD5,
 
 		get:function(){
 			return{
-				lang:this.lang,
 				defaultMode:this.defaultMode
 			}
 		},
@@ -346,74 +361,20 @@ var SFVCheckerSettings=(function(){
 			if(IS_STORAGE_AVAILABLE && localStorage.getItem('sfv-checker')){
 				var loadedSettings=JSON.parse(localStorage.getItem('sfv-checker'));
 
-				if(typeof loadedSettings.defaultMode==='number' && loadedSettings.defaultMode>=MODE_CRC32 && loadedSettings.defaultMode<=MODE_SHA1)
+				if(typeof loadedSettings.defaultMode==='number' && (loadedSettings.defaultMode===MODE_CRC32 || loadedSettings.defaultMode===MODE_MD5 || loadedSettings.defaultMode===MODE_SHA1))
 					this.defaultMode=loadedSettings.defaultMode;
-					el('select-mode').value=this.defaultMode;
-
-				if(typeof loadedSettings.lang==='string'){
-					this.lang=getValidLanguage(loadedSettings.lang);
-					MarcTranslatableUI.setLanguage(this.lang);
-				}
-
+					document.getElementById('select-mode').value=this.defaultMode;
 			}
 		},
 		delete:function(){
 			if(IS_STORAGE_AVAILABLE && localStorage.getItem('sfv-checker')){
 				localStorage.removeItem('sfv-checker');
 			}
-		},
-		nextLanguage:function(){
-			var newLangCode=MarcTranslatableUI.nextLanguage();
-			this.lang=newLangCode;
-			refreshEmptyMessage();
-			this.save();
 		}
 	}
 }());
 
 
-
-/* initialize app */
-addEvent(window,'load',function(){
-	document.body.appendChild(DragAndDropZone);
-
-	el('input-files').value='';
-
-	/* events */
-	addEvent(el('select-mode'), 'change', function(){
-		setMode(parseInt(this.value));
-		SFVCheckerSettings.save();
-		hashNextFile();
-	});
-	addEvent(el('button-add'), 'click', function(){
-		el('input-files').click();
-	});	
-	addEvent(el('button-add-string'), 'click', function(){
-		const text=prompt(_('type_text'));
-		if(text){
-			const fileName=text+'.txt';
-			const blob=new Blob([text], {type: 'text/plain'});
-			const fakeFile=new File([blob], fileName);
-			addFile(fileName, fakeFile);
-			refreshWrapper();
-			hashNextFile();
-		}
-	});	
-	addEvent(el('button-export'), 'click', function(){
-		exportFileList(getMode());
-	});
-	addEvent(el('button-delete'), 'click', function(){
-		clearList();
-	});
-	
-	addEvent(el('input-files'), 'change', function(){
-		parseInputFiles(this.files);
-		document.getElementById('form').reset();
-	});
-	
-	SFVCheckerSettings.load();
-	setMode(getMode());
-});
 
 
 function parseFileList(file, mode){
@@ -511,6 +472,83 @@ function exportFileList(mode){
 		saveAs(new Blob([str], {type: "text/plain;charset=utf-8"}), 'your_files.'+extension);
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* initialize app */
+window.addEventListener('load',function(){
+	TranslateUI.addLanguages(LOCALES);
+
+	document.getElementById('input-files').value='';
+
+	/* UI events */
+	document.getElementById('select-mode').addEventListener('change', function(){
+		setMode(parseInt(this.value));
+		SFVCheckerSettings.save();
+		hashNextFile();
+	});
+	document.getElementById('button-add').addEventListener('click', function(){
+		document.getElementById('input-files').click();
+	});	
+	document.getElementById('button-add-string').addEventListener('click', function(){
+		const text=prompt(_('Type text to hash:'));
+		if(text){
+			const fileName=text+'.txt';
+			const blob=new Blob([text], {type: 'text/plain'});
+			const fakeFile=new File([blob], fileName);
+			addFile(fileName, fakeFile);
+			refreshWrapper();
+			hashNextFile();
+		}
+	});	
+	document.getElementById('button-export').addEventListener('click', function(){
+		exportFileList(getMode());
+	});
+	document.getElementById('button-delete').addEventListener('click', function(){
+		clearList();
+	});
+	
+	document.getElementById('input-files').addEventListener('change', function(){
+		parseInputFiles(this.files);
+		document.getElementById('form').reset();
+	});
+
+	/* load settings and initialize app */
+	SFVCheckerSettings.load();
+	setMode(getMode());
+	TranslateUI.translateAll();
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*
 * FileSaver.js
 * A saveAs() FileSaver implementation.
@@ -542,7 +580,7 @@ function parseInputFiles(files){
 		}
 	}
 	if(typeof newMode==='number' && getMode()!==newMode){
-		el('select-mode').value=newMode;
+		document.getElementById('select-mode').value=newMode;
 		setMode(newMode);
 	}
 	hashNextFile();
@@ -552,65 +590,14 @@ function parseInputFiles(files){
 
 
 
-/* drag and drop */
-DragAndDropZone=(function(){
-	function preventDefault(e){if(e.preventDefault)e.preventDefault();else e.returnValue=false}
-	
-	var _dropFilesEvt=parseInputFiles;
+/*
+* Translate UI JS
+* Lightweight library for webapp UI translations
+* (last update: 2025-06-17)
+* By Marc Robledo https://www.marcrobledo.com
+*
+* Released under MIT license, see the top of this file for details
+*/
+const TranslateUI=function(n){const r={};function o(e,t,a){if(r[t]&&r[t][e]?e=r[t][e]:r.default&&r.default[e]&&(e=r.default[e]),Array.isArray(a))for(var n=0;n<a.length;n++)e=e.replace(new RegExp("%"+(n+1),"g"),a[n]);else a&&(e=e.replace(/%[s1]/g,a));return e}function a(e,t){if("string"==typeof e&&(e=document.querySelector(e)),!e instanceof HTMLElement)return null;t&&(e._translateParams=t);var t="INPUT"===(a=e).tagNode&&"text"===a.type||"TEXTAREA"===a.tagNode?"placeholder":"innerHTML",a=e.getAttribute("data-translate");return"*"===a?(e.setAttribute("data-translate",e[t]),e[t]=o(e[t],g,e._translateParams)):e[t]=o(a,g,e._translateParams),e[t]}function u(){const e=document.querySelectorAll("*[data-translate]");return e.forEach(function(e,t){a(e,null)}),e}var g=n;return{addLanguage:function(e,t,a){if("object"!=typeof e)throw new TypeError("TranslateUI.addLanguage: locale parameter is not an object");if(void 0===t||"string"!=typeof t)t=n;else if("string"!=typeof t)throw new TypeError("TranslateUI.addLanguage: langCode parameter is not an string");return r[t]=e,a&&(g=t,u()),r},addLanguages:function(e,t){if("object"!=typeof e)throw new TypeError("TranslateUI.addLanguages: locales parameter is not an object");for(var a in t&&"string"!=typeof t&&(t=n),e)"object"==typeof e[a]&&this.addLanguage(e[a],a,t&&t===a);return r},setLanguage:function(e){return"string"!=typeof e&&(e=n),g=e,u(),r[e]},getCurrentLanguage:function(){return g},getBrowserLanguage:function(){return n},_:function(e,t,a){return o(e,"string"==typeof t?t:g,a)},translateElement:a,translateAll:u}}(navigator.language||navigator.userLanguage||navigator.browserLanguage||"en-US");
+const _=TranslateUI._;
 
-	var showDrag=false, timeout=-1;
-
-	/* check if drag items are files */
-	function checkIfDraggingFiles(e){
-		if(e.dataTransfer.types)
-			for(var i=0;i<e.dataTransfer.types.length;i++)
-				if(e.dataTransfer.types[i]==='Files')
-					return true;
-		return false
-	}
-
-	/* remove dragging-files class name from body */
-	function removeClass(){document.body.className=document.body.className.replace(/ dragging-files/g,'')}
-
-
-	/* add drag and drop events */
-	addEvent(document,'drop',removeClass);
-	addEvent(document,'dragenter',function(e){
-		if(checkIfDraggingFiles(e)){
-			if(!/ dragging-files/.test(document.body.className))
-				document.body.className+=' dragging-files'
-			showDrag=true; 
-		}
-	});
-	addEvent(document,'dragleave',function(e){
-		showDrag=false; 
-		clearTimeout(timeout);
-		timeout=setTimeout(function(){
-			if(!showDrag)
-				removeClass();
-		}, 200);
-	});
-	addEvent(document,'dragover',function(e){
-		if(checkIfDraggingFiles(e)){
-			stopPropagation(e);
-			preventDefault(e);
-			showDrag=true; 
-		}
-	});
-
-	/* create drag and drop zone */
-	var overlay=document.createElement('div');
-	overlay.id='drop-overlay';
-	overlay.innerHTML='Drop files here';
-
-	addEvent(overlay,'drop',function(e){
-		stopPropagation(e);
-		preventDefault(e);
-		removeClass();
-		if(checkIfDraggingFiles(e)){
-			_dropFilesEvt(e.dataTransfer.files);
-		}
-	});
-
-	return overlay
-}());
