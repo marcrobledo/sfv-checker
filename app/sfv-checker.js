@@ -1,7 +1,7 @@
 /*
 * SFV Checker
 * A web app that calculates and checks CRC32, MD5 or SHA1 file integrities.
-* (last update: 2025-06-20)
+* (last update: 2025-06-23)
 * By Marc Robledo https://www.marcrobledo.com
 *
 * License:
@@ -78,6 +78,7 @@ else if(location.protocol==='https:' && 'serviceWorker' in navigator)
 
 var filesByName={};
 var isHashing=false;
+var filePicker;
 
 /* Web Worker */
 const webWorker=new Worker('./app/web_worker.js');
@@ -491,7 +492,11 @@ function exportFileList(mode){
 window.addEventListener('load',function(){
 	TranslateUI.addLanguages(LOCALES);
 
-	document.getElementById('input-files').value='';
+	filePicker=SimpleFilePicker.on(parseInputFiles, {
+			dragAndDrop:true,
+			multiple:true
+		}
+	);
 
 	/* UI events */
 	document.getElementById('select-mode').addEventListener('change', function(){
@@ -500,7 +505,7 @@ window.addEventListener('load',function(){
 		hashNextFile();
 	});
 	document.getElementById('button-add').addEventListener('click', function(){
-		document.getElementById('input-files').click();
+		filePicker.pick();
 	});	
 	document.getElementById('button-add-string').addEventListener('click', function(){
 		const text=prompt(_('Type text to hash:'));
@@ -518,11 +523,6 @@ window.addEventListener('load',function(){
 	});
 	document.getElementById('button-delete').addEventListener('click', function(){
 		clearList();
-	});
-	
-	document.getElementById('input-files').addEventListener('change', function(){
-		parseInputFiles(this.files);
-		document.getElementById('form').reset();
 	});
 
 	/* load settings and initialize app */
@@ -601,3 +601,12 @@ function parseInputFiles(files){
 const TranslateUI=function(n){const r={};function o(e,t,a){if(r[t]&&r[t][e]?e=r[t][e]:r.default&&r.default[e]&&(e=r.default[e]),Array.isArray(a))for(var n=0;n<a.length;n++)e=e.replace(new RegExp("%"+(n+1),"g"),a[n]);else a&&(e=e.replace(/%[s1]/g,a));return e}function a(e,t){if("string"==typeof e&&(e=document.querySelector(e)),!e instanceof HTMLElement)return null;t&&(e._translateParams=t);var t="INPUT"===(a=e).tagNode&&"text"===a.type||"TEXTAREA"===a.tagNode?"placeholder":"innerHTML",a=e.getAttribute("data-translate");return"*"===a?(e.setAttribute("data-translate",e[t]),e[t]=o(e[t],g,e._translateParams)):e[t]=o(a,g,e._translateParams),e[t]}function u(){const e=document.querySelectorAll("*[data-translate]");return e.forEach(function(e,t){a(e,null)}),e}var g=n;return{addLanguage:function(e,t,a){if("object"!=typeof e)throw new TypeError("TranslateUI.addLanguage: locale parameter is not an object");if(void 0===t||"string"!=typeof t)t=n;else if("string"!=typeof t)throw new TypeError("TranslateUI.addLanguage: langCode parameter is not an string");return r[t]=e,a&&(g=t,u()),r},addLanguages:function(e,t){if("object"!=typeof e)throw new TypeError("TranslateUI.addLanguages: locales parameter is not an object");for(var a in t&&"string"!=typeof t&&(t=n),e)"object"==typeof e[a]&&this.addLanguage(e[a],a,t&&t===a);return r},setLanguage:function(e){return"string"!=typeof e&&(e=n),g=e,u(),r[e]},getCurrentLanguage:function(){return g},getBrowserLanguage:function(){return n},_:function(e,t,a){return o(e,"string"==typeof t?t:g,a)},translateElement:a,translateAll:u}}(navigator.language||navigator.userLanguage||navigator.browserLanguage||"en-US");
 const _=TranslateUI._;
 
+/*
+* Simple File Picker JS
+* Adds both file picker and drag and drop features with a single call
+* (last update: 2025-06-23)
+* By Marc Robledo https://www.marcrobledo.com
+*
+* Released under MIT license, see the top of this file for details
+*/
+const SimpleFilePicker=function(){var a=!1;const b=function(a){if(a.dataTransfer.types)for(var b=0;b<a.dataTransfer.types.length;b++)if("Files"===a.dataTransfer.types[b])return a.dataTransfer.files;return!1},c=function(){a||(document.addEventListener("dragenter",function(a){b(a)&&document.body.classList.add("dragging-files")}),document.addEventListener("dragleave",function(){document.body.classList.remove("dragging-files")}),document.addEventListener("dragover",function(a){a.stopPropagation(),a.preventDefault(),b(a)&&document.body.classList.add("dragging-files")}),document.body.addEventListener("drop",function(){document.body.classList.remove("dragging-files")}),a=!0)};return{on:function(a,d){const e={readAs:null,accept:null,dragAndDrop:null,multiple:!1};"media"===d?(e.readAs="base64",e.accept="image/*,video/*,audio/*"):"image"===d||"video"===d||"audio"===d?(e.readAs="base64",e.accept=d+"/*"):"text"===d?e.readAs="text":"arraybuffer"===d?e.readAs="arraybuffer":"base64"===d?e.readAs="base64":"object"==typeof d&&(("text"===d.readAs||"arraybuffer"===d.readAs||"base64"===d.readAs)&&(e.readAs=d.readAs),"string"==typeof d.accept&&(e.accept=d.accept),e.multiple=!!d.multiple,"string"==typeof d.dragAndDrop?d.dragAndDrop=document.querySelector(d.dragAndDrop):d.dragAndDrop instanceof HTMLElement?e.dragAndDrop=d.dragAndDrop:!!d.dragAndDrop&&(e.dragAndDrop=document.body));const f=document.createElement("input");f.type="file",f.style.display="none",e.multiple&&f.setAttribute("multiple","multiple"),e.accept&&f.setAttribute("accept",e.accept);const g=function(b){if("arraybuffer"===e.readAs||"base64"===e.readAs||"text"===e.readAs){const c=new FileReader;c.addEventListener("load",function(c){a(b,c.target.result)}),c.addEventListener("error",function(){throw new Error("MarcUI.filepicker error while reading a file as "+e.readAs)}),"arraybuffer"===e.readAs?c.readAsArrayBuffer(b):"base64"===e.readAs?c.readAsDataURL(b):"text"===e.readAs&&c.readAsText(b)}else a(b,null)};return f.addEventListener("change",function(){this.files.length&&g(e.multiple?this.files:this.files[0])}),e.dragAndDrop&&(c(),e.dragAndDrop.addEventListener("drop",function(a){a.stopPropagation(),a.preventDefault();const c=b(a);c&&g(e.multiple?c:c[0])})),{pick:function(){document.body.appendChild(f),f.click(),document.body.removeChild(f)},reset:function(){f.value=""},off:function(){}}}}}();
